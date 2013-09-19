@@ -1,0 +1,22 @@
+{
+  "name": "movover-web",
+  "version": "0.0.1",
+  "description": "Movover web application, handling front-end and customers administration.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leonardfactory/movover-web.git"
+  },
+  "author": "Leonardo Ascione <me@leonardfactory.com>",
+  "readmeFilename": "README.md",
+  "gitHead": "eeb2669f5afe5a193dc766b2f16402dd9b7382f1",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-coffee": "~0.7.0"
+  }
+}
