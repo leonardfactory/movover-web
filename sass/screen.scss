@@ -1,0 +1,31 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+@import "compass/css3/border-radius";
+
+// Logo
+.navbar-brand-logo {
+	padding: 13px 25px;
+}
+
+// Maps
+#map-canvas {
+	height: 200px;
+	margin-top: 4em;
+	margin-bottom: 1em;
+	@include border-radius(4px);
+}
+
+.white-well {
+	background-color: #ffffff;
+}
+
+.logo-box {
+	@include border-radius(4px);
+	box-sizing: border-box;
+	background-color: #ffffff;
+	padding: 1em;
+	margin: 1em;
+}
