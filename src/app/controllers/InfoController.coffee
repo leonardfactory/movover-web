@@ -9,4 +9,3 @@ app.controller 'InfoController',
 					
 			# Some fixtures
 			@$scope.title = "InfoController"
-		

@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 					expand: true,
 					cwd: 'sass',
 					src: ['*.scss'],
-					dest: 'css',
+					dest: 'public/css',
 					ext: '.css'
 				}]
 			}
@@ -24,7 +24,7 @@ module.exports = function(grunt) {
 					bare: true
 				},
 				files: {
-					'js/application.js': 'src/app/**/*.coffee'
+					'public/js/application.js': 'src/app/**/*.coffee'
 				}
 			}
 		},
@@ -35,7 +35,7 @@ module.exports = function(grunt) {
 			},
 			main: {
 				src: ['src/partials/**/*.tpl.html'],
-				dest: 'js/templates.js'
+				dest: 'public/js/templates.js'
 			},
 		},
 		watch: {
@@ -61,5 +61,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-html2js');
 
 	// Default task(s).
-	grunt.registerTask('default', ['sass', 'coffee']);
+	grunt.registerTask('default', ['sass', 'coffee', 'html2js']);
 };
