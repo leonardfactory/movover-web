@@ -20,17 +20,32 @@ module.exports = function(grunt) {
 		coffee: {
 			compileJoined: {
 				options: {
-					join: true
+					join: true,
+					bare: true
 				},
 				files: {
 					'js/application.js': 'src/app/**/*.coffee'
 				}
 			}
 		},
+		html2js: {
+			options: {
+				// custom options, see below
+				base: 'src/partials'    
+			},
+			main: {
+				src: ['src/partials/**/*.tpl.html'],
+				dest: 'js/templates.js'
+			},
+		},
 		watch: {
 			application_code: {
 				files: 'src/app/**/*.coffee',
 				tasks: ['coffee']
+			},
+			templates_code: {
+				files: 'src/partials/**/*.tpl.html',
+				tasks: ['html2js']
 			},
 			sass_styles: {
 				files: 'sass/*.scss',
@@ -43,6 +58,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-coffee');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-sass');
+	grunt.loadNpmTasks('grunt-html2js');
 
 	// Default task(s).
 	grunt.registerTask('default', ['sass', 'coffee']);
