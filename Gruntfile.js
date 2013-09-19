@@ -3,17 +3,6 @@ module.exports = function(grunt) {
 	// Project configuration.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		concat: {
-			options: {
-				stripBanners: true,
-				banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-				'<%= grunt.template.today("yyyy-mm-dd") %> */',
-			},
-			dist: {
-				src: ['src/js/**/*.js'],
-				dest: 'js/application.js',
-			}
-		},
 		sass: {                              // Task
 			dist: {                            // Target
 				options: {                       // Target options
@@ -34,18 +23,14 @@ module.exports = function(grunt) {
 					join: true
 				},
 				files: {
-					'js/application.js': 'src/**/*.coffee'
+					'js/application.js': 'src/app/**/*.coffee'
 				}
 			}
-		}
+		},
 		watch: {
-			ember_templates: {
-				files: 'src/templates/**/*.handlebars',
-				tasks: ['emberTemplates']
-			},
 			application_code: {
-				files: 'src/js/**/*.js',
-				tasks: ['concat']
+				files: 'src/app/**/*.coffee',
+				tasks: ['coffee']
 			},
 			sass_styles: {
 				files: 'sass/*.scss',
@@ -57,10 +42,8 @@ module.exports = function(grunt) {
 	// Load the plugins
 	grunt.loadNpmTasks('grunt-contrib-coffee');
 	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-sass');
 
 	// Default task(s).
-	grunt.registerTask('default', ['uglify']);
-
+	grunt.registerTask('default', ['sass', 'coffee']);
 };
