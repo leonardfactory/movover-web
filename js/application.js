@@ -1,4 +1,4 @@
-var InfoController, app, controller, navigation, route;
+var Adapter, InfoController, app, controller, navigation, route;
 
 navigation = angular.module('navigation', []);
 
@@ -9,9 +9,14 @@ route = angular.module('route', ['templates-main']);
 app = angular.module('app', ['navigation', 'controller', 'route']);
 
 app.controller('InfoController', InfoController = (function() {
-  function InfoController($scope) {
+  function InfoController($scope, $http, adapter) {
+    var _this = this;
     this.$scope = $scope;
-    console.log('InfoController generated');
+    this.$http = $http;
+    this.adapter = adapter;
+    $http.jsonp("" + this.adapter.path + "shop/523b2b7194e535b36cbe68dd?callback=JSON_CALLBACK").success(function(data) {
+      return _this.$scope.shop = data;
+    });
     this.$scope.title = "InfoController";
   }
 
@@ -54,3 +59,13 @@ route.config([
     });
   }
 ]);
+
+app.service('adapter', Adapter = (function() {
+  function Adapter($http) {
+    this.$http = $http;
+    this.path = 'http://localhost:8080/';
+  }
+
+  return Adapter;
+
+})());

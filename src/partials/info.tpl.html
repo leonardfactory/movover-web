@@ -1,3 +1,30 @@
-<!-- Something! -->
-<h2>Info</h2>
-<p>Per la precisione: {{ title }}</p>
+<div class="well" ng-controller="InfoController">
+    <form class="form-horizontal">
+        <fieldset>
+            <legend>Informazioni Generali</legend>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Nome</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" placeholder="Shop" ng-model="shop.name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Descrizione</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" placeholder="Scrivi qualcosa sul tuo locale..." ng-model="shop.description">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Indirizzo</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" placeholder="Via del Grano, 12" ng-model="shop.address.complete">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    <button type="submit" class="btn btn-success">Salva modifiche</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
