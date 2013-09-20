@@ -7,6 +7,23 @@ app.controller 'LoginController',
 				
 			@$scope.error = false
 			
+			@$scope.checkUser = true
+			
+			# Try to login user (check cookies)
+			auth.isUserLogged()
+			
+			@$scope.$watch(
+				-> auth.user.logged
+				(newVal, oldVal) =>
+					if newVal is true
+						@$location.path '/info'
+			)
+			
+			@$scope.$watch(
+				-> auth.checking
+				=> @$scope.checkUser = auth.checking
+			)
+			
 			@$scope.login = =>
 				$http
 					.post("/api/user/login", @$scope.user)

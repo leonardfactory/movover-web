@@ -94,9 +94,13 @@ angular.module("login.tpl.html", []).run(["$templateCache", function($templateCa
     "		<button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>\n" +
     "		<strong>Oops!</strong> Alcuni campi non sono stati compilati correttamente, modificali e riprova.\n" +
     "	</div>\n" +
+    "	<div class=\"alert alert-dismissable alert-info\" ng-show=\"checkUser\">\n" +
+    "		<button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>\n" +
+    "		<strong>Loading...</strong>\n" +
+    "	</div>\n" +
     "	<!-- Login Form -->\n" +
     "	<div class=\"well col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2\">\n" +
-    "		<div class=\"form-horizontal\" ng-controller=\"LoginController\">\n" +
+    "		<div class=\"form-horizontal\">\n" +
     "	        <fieldset>\n" +
     "	            <legend>Login</legend>\n" +
     "	            <div class=\"form-group\" ng-class=\"{ 'has-error' : isInvalid('username') }\">\n" +

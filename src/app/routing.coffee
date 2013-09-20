@@ -13,9 +13,9 @@ route
 				access:
 					isFree: true
 			)
-			$routeProvider.otherwise redirectTo: '/info'
+			$routeProvider.otherwise redirectTo: '/login'
 	])
 	# Checks for unavailable paths (auth required)
 	.run ($rootScope, $location, auth) ->
 		$rootScope.$on '$routeChangeStart', (event, curr, next) ->
-			$location.path '/login' if (!curr.access.isFree and !auth.user.logged)
+			$location.path '/login' if (curr.access? and !curr.access.isFree and !auth.user.logged)

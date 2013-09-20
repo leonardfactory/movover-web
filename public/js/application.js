@@ -1,5 +1,6 @@
 var Adapter, Auth, InfoController, LoginController, NavigationController, app, controller, navigation, route,
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 navigation = angular.module('navigation', []);
 
@@ -65,6 +66,20 @@ app.controller('LoginController', LoginController = (function() {
       password: ''
     };
     this.$scope.error = false;
+    this.$scope.checkUser = true;
+    auth.isUserLogged();
+    this.$scope.$watch(function() {
+      return auth.user.logged;
+    }, function(newVal, oldVal) {
+      if (newVal === true) {
+        return _this.$location.path('/info');
+      }
+    });
+    this.$scope.$watch(function() {
+      return auth.checking;
+    }, function() {
+      return _this.$scope.checkUser = auth.checking;
+    });
     this.$scope.login = function() {
       return $http.post("/api/user/login", _this.$scope.user).success(function(data) {
         auth.user.logged = true;
@@ -156,12 +171,12 @@ route.config([
       }
     });
     return $routeProvider.otherwise({
-      redirectTo: '/info'
+      redirectTo: '/login'
     });
   }
 ]).run(function($rootScope, $location, auth) {
   return $rootScope.$on('$routeChangeStart', function(event, curr, next) {
-    if (!curr.access.isFree && !auth.user.logged) {
+    if ((curr.access != null) && !curr.access.isFree && !auth.user.logged) {
       return $location.path('/login');
     }
   });
@@ -178,12 +193,27 @@ app.service('adapter', Adapter = (function() {
 })());
 
 app.service('auth', Auth = (function() {
-  function Auth() {
+  function Auth($http) {
+    this.$http = $http;
+    this.isUserLogged = __bind(this.isUserLogged, this);
     this.user = {
       logged: false,
       id: null
     };
+    this.checking = false;
   }
+
+  Auth.prototype.isUserLogged = function() {
+    var _this = this;
+    this.checking = true;
+    return this.$http.get("/api/user/check").success(function(data) {
+      _this.user.logged = true;
+      _this.user.id = data._id;
+      return _this.checking = false;
+    }).error(function(data) {
+      return _this.checking = false;
+    });
+  };
 
   return Auth;
 
