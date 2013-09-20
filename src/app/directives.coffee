@@ -19,3 +19,17 @@ angular
 						else
 							_li.removeClass 'active'
 			)
+
+angular
+	.module('navigation')
+	.directive 'userLogged', (auth) ->
+		restrict: 'A'
+		link: (scope, element, attrs, controller) ->
+			scope.$watch(
+				# When user is or not logged
+				-> auth.user.logged
+				
+				# Show or hide nav bar content
+				(newValue, oldValue) ->
+					element.css 'display', if newValue is true then 'block' else 'none'
+			)

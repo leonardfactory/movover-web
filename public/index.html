@@ -51,7 +51,7 @@
 </head>
 <body>
 	<!-- Navigation -->
-	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" navigation-bar>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" navigation-bar ng-controller="NavigationController">
 	    <!-- Brand and toggle get grouped for better mobile display -->
 	    <div class="navbar-header">
 	        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-head-collapse">
@@ -64,7 +64,7 @@
 	    </div>
 
 	    <div class="navbar-collapse collapse navbar-head-collapse">
-	        <ul class="nav navbar-nav">
+	        <ul class="nav navbar-nav" user-logged>
 	            <li><a href="#">Bar Mario</a></li>
 	            <li class="dropdown active">
 	                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Informazioni Generali <b class="caret"></b></a>
@@ -76,13 +76,13 @@
 	                </ul>
 	            </li>
 	        </ul>
-	        <ul class="nav navbar-nav navbar-right">
+	        <ul class="nav navbar-nav navbar-right" user-logged>
 	            <li class="dropdown">
 	                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mario Rossi <b class="caret"></b></a>
 	                <ul class="dropdown-menu">
 	                    <li><a href="#">Profilo</a></li>
 	                    <li class="divider"></li>
-	                    <li><a href="#">Esci</a></li>
+	                    <li><a href="#" ng-click="logout()">Esci</a></li>
 	                </ul>
 	            </li>
 	        </ul>
@@ -90,7 +90,6 @@
 	</nav>
 	
 	<div class="container">
-		<div id="map-canvas"></div>
 		<ng-view></ng-view>
 	</div>
     <!-- <div class="well">
@@ -128,6 +127,7 @@
 	<script src="js/libs/bootstrap.min.js"></script>
 	<!-- <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script> -->
 	<script src="js/libs/angular.js"></script>
+	<script src="js/libs/angular-cookies.js"></script>
     <!-- External + AngularJS -->
 	<script src="js/application.js"></script>
 	<script src="js/templates.js"></script>

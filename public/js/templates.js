@@ -1,4 +1,4 @@
-angular.module('templates-main', ['info.tpl.html']);
+angular.module('templates-main', ['info.tpl.html', 'login.tpl.html']);
 
 angular.module("info.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("info.tpl.html",
@@ -85,4 +85,38 @@ angular.module("info.tpl.html", []).run(["$templateCache", function($templateCac
     "	    </form>\n" +
     "	</div>\n" +
     "</section>");
+}]);
+
+angular.module("login.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("login.tpl.html",
+    "<section ng-controller=\"LoginController\">\n" +
+    "	<div class=\"alert alert-dismissable alert-danger\" ng-show=\"status == 'error'\">\n" +
+    "		<button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>\n" +
+    "		<strong>Oops!</strong> Alcuni campi non sono stati compilati correttamente, modificali e riprova.\n" +
+    "	</div>\n" +
+    "	<!-- Login Form -->\n" +
+    "	<div class=\"well col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2\">\n" +
+    "		<div class=\"form-horizontal\" ng-controller=\"LoginController\">\n" +
+    "	        <fieldset>\n" +
+    "	            <legend>Login</legend>\n" +
+    "	            <div class=\"form-group\" ng-class=\"{ 'has-error' : isInvalid('username') }\">\n" +
+    "	                <div class=\"col-md-12\">\n" +
+    "	                    <input type=\"text\" class=\"form-control\" placeholder=\"Username\" ng-model=\"user.username\">\n" +
+    "	                </div>\n" +
+    "	            </div>\n" +
+    "	            <div class=\"form-group\" ng-class=\"{ 'has-error' : isInvalid('password') }\">\n" +
+    "	                <div class=\"col-md-12\">\n" +
+    "						 <input type=\"text\" class=\"form-control\" placeholder=\"Password\" ng-model=\"user.password\">\n" +
+    "	                </div>\n" +
+    "	            </div>\n" +
+    "				<div class=\"form-group\">\n" +
+    "					<div class=\"col-md-12\">\n" +
+    "						<button type=\"submit\" class=\"btn btn-success\" ng-click=\"login()\">Accedi</button>\n" +
+    "					</div>\n" +
+    "				</div>\n" +
+    "			</fieldset>\n" +
+    "		</div>\n" +
+    "	</div>\n" +
+    "</section>\n" +
+    "");
 }]);

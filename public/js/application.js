@@ -1,4 +1,4 @@
-var Adapter, InfoController, app, controller, navigation, route,
+var Adapter, Auth, InfoController, LoginController, NavigationController, app, controller, navigation, route,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 navigation = angular.module('navigation', []);
@@ -7,7 +7,7 @@ controller = angular.module('controller', ['templates-main']);
 
 route = angular.module('route', ['templates-main']);
 
-app = angular.module('app', ['navigation', 'controller', 'route']);
+app = angular.module('app', ['navigation', 'controller', 'route', 'ngCookies']);
 
 app.controller('InfoController', InfoController = (function() {
   function InfoController($scope, $http, adapter) {
@@ -54,6 +54,54 @@ app.controller('InfoController', InfoController = (function() {
 
 })());
 
+app.controller('LoginController', LoginController = (function() {
+  function LoginController($scope, $location, $http, auth) {
+    var _this = this;
+    this.$scope = $scope;
+    this.$location = $location;
+    this.$http = $http;
+    this.$scope.user = {
+      username: '',
+      password: ''
+    };
+    this.$scope.error = false;
+    this.$scope.login = function() {
+      return $http.post("/api/user/login", _this.$scope.user).success(function(data) {
+        auth.user.logged = true;
+        auth.user.id = data._id;
+        return _this.$location.path('/info');
+      }).error(function(data) {
+        return _this.$scope.error = true;
+      });
+    };
+  }
+
+  return LoginController;
+
+})());
+
+app.controller('NavigationController', NavigationController = (function() {
+  function NavigationController($scope, $http, $location, auth) {
+    var _this = this;
+    this.$scope = $scope;
+    this.$http = $http;
+    this.$location = $location;
+    this.$scope.logout = function() {
+      if (auth.user.logged) {
+        return $http.get("/api/user/logout").success(function(data) {
+          auth.user.logged = false;
+          return $location.path('/login');
+        }).error(function(data) {
+          return console.log(data);
+        });
+      }
+    };
+  }
+
+  return NavigationController;
+
+})());
+
 angular.module('navigation').directive('navigationBar', function($location) {
   return {
     restrict: 'A',
@@ -78,17 +126,46 @@ angular.module('navigation').directive('navigationBar', function($location) {
   };
 });
 
+angular.module('navigation').directive('userLogged', function(auth) {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs, controller) {
+      return scope.$watch(function() {
+        return auth.user.logged;
+      }, function(newValue, oldValue) {
+        return element.css('display', newValue === true ? 'block' : 'none');
+      });
+    }
+  };
+});
+
 route.config([
   '$routeProvider', function($routeProvider) {
     $routeProvider.when('/info', {
       templateUrl: 'info.tpl.html',
-      controller: 'InfoController'
+      controller: 'InfoController',
+      access: {
+        isFree: false
+      }
+    });
+    $routeProvider.when('/login', {
+      templateUrl: 'login.tpl.html',
+      controller: 'LoginController',
+      access: {
+        isFree: true
+      }
     });
     return $routeProvider.otherwise({
       redirectTo: '/info'
     });
   }
-]);
+]).run(function($rootScope, $location, auth) {
+  return $rootScope.$on('$routeChangeStart', function(event, curr, next) {
+    if (!curr.access.isFree && !auth.user.logged) {
+      return $location.path('/login');
+    }
+  });
+});
 
 app.service('adapter', Adapter = (function() {
   function Adapter($http) {
@@ -97,5 +174,17 @@ app.service('adapter', Adapter = (function() {
   }
 
   return Adapter;
+
+})());
+
+app.service('auth', Auth = (function() {
+  function Auth() {
+    this.user = {
+      logged: false,
+      id: null
+    };
+  }
+
+  return Auth;
 
 })());

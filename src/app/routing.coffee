@@ -1,8 +1,21 @@
-route.config [
-	'$routeProvider', ($routeProvider) ->
-		$routeProvider.when('/info', 
-			templateUrl: 'info.tpl.html',
-			controller: 'InfoController'
-		)
-		$routeProvider.otherwise redirectTo: '/info'
-	]
+route
+	.config([
+		'$routeProvider', ($routeProvider) ->
+			$routeProvider.when('/info', 
+				templateUrl: 'info.tpl.html'
+				controller: 'InfoController'
+				access: 
+					isFree: false
+			)
+			$routeProvider.when('/login',
+				templateUrl: 'login.tpl.html'
+				controller: 'LoginController'
+				access:
+					isFree: true
+			)
+			$routeProvider.otherwise redirectTo: '/info'
+	])
+	# Checks for unavailable paths (auth required)
+	.run ($rootScope, $location, auth) ->
+		$rootScope.$on '$routeChangeStart', (event, curr, next) ->
+			$location.path '/login' if (!curr.access.isFree and !auth.user.logged)
