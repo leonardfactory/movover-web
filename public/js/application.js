@@ -1,4 +1,5 @@
-var Adapter, InfoController, app, controller, navigation, route;
+var Adapter, InfoController, app, controller, navigation, route,
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 navigation = angular.module('navigation', []);
 
@@ -14,10 +15,39 @@ app.controller('InfoController', InfoController = (function() {
     this.$scope = $scope;
     this.$http = $http;
     this.adapter = adapter;
-    $http.jsonp("" + this.adapter.path + "shop/523b2b7194e535b36cbe68dd?callback=JSON_CALLBACK").success(function(data) {
-      return _this.$scope.shop = data;
+    this.$scope.master = {};
+    this.$scope.errors = [];
+    this.$scope.status = '';
+    $http.get("/api/shop/523b2b7194e535b36cbe68dd").success(function(data) {
+      _this.$scope.shop = data;
+      _this.$scope.master = data;
+      return console.log(data);
     });
     this.$scope.title = "InfoController";
+    this.$scope.reset = function() {
+      return _this.$scope.shop = angular.copy(_this.$scope.master);
+    };
+    this.$scope.update = function() {
+      return $http.post("/api/shop/523b2b7194e535b36cbe68dd", _this.$scope.shop).success(function(data) {
+        _this.$scope.errors = [];
+        _this.$scope.master = angular.copy(_this.$scope.shop);
+        return _this.$scope.status = 'success';
+      }).error(function(data) {
+        var error, _i, _len, _ref, _results;
+        _this.$scope.status = 'error';
+        _this.$scope.errors = [];
+        _ref = data.error;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          error = _ref[_i];
+          _results.push(_this.$scope.errors.push(error.param));
+        }
+        return _results;
+      });
+    };
+    this.$scope.isInvalid = function(param) {
+      return __indexOf.call(_this.$scope.errors, param) >= 0;
+    };
   }
 
   return InfoController;

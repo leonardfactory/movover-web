@@ -1,30 +1,83 @@
-<div class="well" ng-controller="InfoController">
-    <form class="form-horizontal">
-        <fieldset>
-            <legend>Informazioni Generali</legend>
-            <div class="form-group">
-                <label class="col-lg-2 control-label">Nome</label>
-                <div class="col-lg-10">
-                    <input type="text" class="form-control" placeholder="Shop" ng-model="shop.name">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-lg-2 control-label">Descrizione</label>
-                <div class="col-lg-10">
-                    <input type="text" class="form-control" placeholder="Scrivi qualcosa sul tuo locale..." ng-model="shop.description">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-lg-2 control-label">Indirizzo</label>
-                <div class="col-lg-10">
-                    <input type="text" class="form-control" placeholder="Via del Grano, 12" ng-model="shop.address.complete">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-lg-10 col-lg-offset-2">
-                    <button type="submit" class="btn btn-success">Salva modifiche</button>
-                </div>
-            </div>
-        </fieldset>
-    </form>
-</div>
+<section ng-controller="InfoController">
+	<!-- Alert -->
+	<div class="alert alert-dismissable alert-success" ng-show="status == 'success'">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+		<strong>Salvato!</strong> Hai aggiornato con successo le tue informazioni generali.
+	</div>
+	<div class="alert alert-dismissable alert-danger" ng-show="status == 'error'">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+		<strong>Oops!</strong> Alcuni campi non sono stati compilati correttamente, modificali e riprova.
+	</div>
+	
+	<div class="well">
+	    <form class="form-horizontal">
+	        <fieldset>
+	            <legend>Informazioni Generali</legend>
+	            <div class="form-group" ng-class="{ 'has-error' : isInvalid('name') }">
+	                <label class="col-md-2 control-label">Nome</label>
+	                <div class="col-md-10">
+	                    <input type="text" class="form-control" placeholder="Shop" ng-model="shop.name">
+	                </div>
+	            </div>
+	            <div class="form-group" ng-class="{ 'has-error' : isInvalid('description') }">
+	                <label class="col-md-2 control-label">Descrizione</label>
+	                <div class="col-md-10">
+						<textarea class="form-control" rows="3" placeholder="Scrivi qualcosa sul tuo locale..." ng-model="shop.description"></textarea>
+	                </div>
+	            </div>
+				<!-- Via e numero -->
+	            <div class="form-group">
+					<div ng-class="{ 'has-error' : isInvalid('address.streetName') }">
+		                <label class="col-md-2 control-label">Indirizzo</label>
+		                <div class="col-md-7">
+		                    <input type="text" class="form-control" placeholder="Via..." ng-model="shop.address.streetName">
+		                </div>
+					</div>
+					<div ng-class="{ 'has-error' : isInvalid('address.streetNumber') }">
+		                <label class="col-md-1 control-label">Numero</label>
+		                <div class="col-md-2">
+		                    <input type="text" class="form-control" placeholder="#" ng-model="shop.address.streetNumber">
+		                </div>
+					</div>
+	            </div>
+				<!-- Interno -->
+	            <div class="form-group">
+					<div ng-class="{ 'has-error' : isInvalid('address.addressTypeIdentifier') }">
+		                <label class="col-md-2 control-label">Altro</label>
+		                <div class="col-md-10">
+		                    <input type="text" class="form-control" placeholder="Interno..." ng-model="shop.address.addressTypeIdentifier">
+		                </div>
+					</div>
+	            </div>
+				<!-- Comune, Provincia e CAP -->
+	            <div class="form-group">
+					<div ng-class="{ 'has-error' : isInvalid('address.municipality') }">
+		                <label class="col-md-2 control-label">Comune</label>
+		                <div class="col-md-4">
+		                    <input type="text" class="form-control" placeholder="Comune..." ng-model="shop.address.municipality">
+		                </div>
+					</div>
+					<div ng-class="{ 'has-error' : isInvalid('address.province') }">
+		                <label class="col-md-1 control-label">Provincia</label>
+		                <div class="col-md-2">
+		                    <input type="text" class="form-control" placeholder="RM.." ng-model="shop.address.province">
+		                </div>
+					</div>
+					<div ng-class="{ 'has-error' : isInvalid('address.postalCode') }">
+		                <label class="col-md-1 control-label">CAP</label>
+		                <div class="col-md-2">
+		                    <input type="text" class="form-control" placeholder="00000" ng-model="shop.address.postalCode">
+		                </div>
+					</div>
+	            </div>
+				<!-- Azioni -->
+	            <div class="form-group">
+	                <div class="col-md-10 col-md-offset-2">
+						<button type="submit" class="btn btn-default" ng-click="reset()">Annulla</button>
+	                    <button type="submit" class="btn btn-success" ng-click="update()">Salva modifiche</button>
+	                </div>
+	            </div>
+	        </fieldset>
+	    </form>
+	</div>
+</section>

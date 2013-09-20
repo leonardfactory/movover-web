@@ -1,11 +1,39 @@
 app.controller 'InfoController', 
 	class InfoController
 		constructor: (@$scope, @$http, @adapter) ->
+			# Master copy
+			@$scope.master = {}
+			@$scope.errors = []
+			@$scope.status = ''
+			
 			# Load data from server
 			$http
-				.jsonp("#{@adapter.path}shop/523b2b7194e535b36cbe68dd?callback=JSON_CALLBACK")
+				.get("/api/shop/523b2b7194e535b36cbe68dd")
 				.success (data) =>
 					@$scope.shop = data
+					@$scope.master = data
+					console.log data
 					
 			# Some fixtures
 			@$scope.title = "InfoController"
+		
+			@$scope.reset = =>
+				@$scope.shop = angular.copy(@$scope.master)
+		
+			@$scope.update = =>
+				$http
+					.post("/api/shop/523b2b7194e535b36cbe68dd", @$scope.shop)
+					.success (data) =>
+						@$scope.errors = []
+						@$scope.master = angular.copy(@$scope.shop)
+						@$scope.status = 'success'
+						# @todo show success message
+					.error (data) =>
+						@$scope.status = 'error'
+						@$scope.errors = []
+						for error in data.error
+							@$scope.errors.push error.param
+							
+			@$scope.isInvalid = (param) =>
+				param in @$scope.errors
+			
