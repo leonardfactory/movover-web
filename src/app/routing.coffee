@@ -13,6 +13,12 @@ route
 				access:
 					isFree: true
 			)
+			$routeProvider.when('/feed',
+				templateUrl: 'feed.tpl.html'
+				controller: 'FeedController'
+				access:
+					isFree: false
+			)
 			$routeProvider.otherwise redirectTo: '/login'
 	])
 	# Checks for unavailable paths (auth required)

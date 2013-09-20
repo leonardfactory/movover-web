@@ -1,4 +1,4 @@
-var Adapter, Auth, InfoController, LoginController, NavigationController, app, controller, navigation, route,
+var Adapter, Auth, FeedController, InfoController, LoginController, NavigationController, app, controller, navigation, route,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
@@ -9,6 +9,33 @@ controller = angular.module('controller', ['templates-main']);
 route = angular.module('route', ['templates-main']);
 
 app = angular.module('app', ['navigation', 'controller', 'route', 'ngCookies']);
+
+app.controller('FeedController', FeedController = (function() {
+  function FeedController($scope, $http) {
+    var _this = this;
+    this.$scope = $scope;
+    this.$http = $http;
+    this.$scope.feed = [];
+    $http.get('/api/area/522495d887789a8a0350e81a/actions').success(function(data) {
+      var action, actions, _i, _len;
+      actions = data.actions;
+      for (_i = 0, _len = actions.length; _i < _len; _i++) {
+        action = actions[_i];
+        $http.get("/api/user/" + action.subject + "/profile").success(function(userData) {
+          console.log(userData);
+          return action.user = userData.user.username;
+        });
+        $http.get("/api/user/" + action.subject + "/avatar/72").success(function(userAvatar) {
+          return action.avatar = userAvatar.url;
+        });
+      }
+      return _this.$scope.feed = actions;
+    });
+  }
+
+  return FeedController;
+
+})());
 
 app.controller('InfoController', InfoController = (function() {
   function InfoController($scope, $http, adapter) {
@@ -168,6 +195,13 @@ route.config([
       controller: 'LoginController',
       access: {
         isFree: true
+      }
+    });
+    $routeProvider.when('/feed', {
+      templateUrl: 'feed.tpl.html',
+      controller: 'FeedController',
+      access: {
+        isFree: false
       }
     });
     return $routeProvider.otherwise({

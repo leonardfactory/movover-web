@@ -1,4 +1,23 @@
-angular.module('templates-main', ['info.tpl.html', 'login.tpl.html']);
+angular.module('templates-main', ['feed.tpl.html', 'info.tpl.html', 'login.tpl.html']);
+
+angular.module("feed.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("feed.tpl.html",
+    "<section ng-controller=\"FeedController\">\n" +
+    "	<div class=\"well col-sm-6 col-sm-offset-3\" ng-repeat=\"action in feed\">\n" +
+    "		<div class=\"row\">\n" +
+    "			<div class=\"col-xs-2\">\n" +
+    "				<div class=\"avatar\" style=\"background-image: url({{ action.avatar }});\"></div>\n" +
+    "			</div>\n" +
+    "			<div class=\"col-xs-10\">\n" +
+    "				<h4><strong>@{{action.user}}</strong></h4>\n" +
+    "				<p>\n" +
+    "					{{ action.text }}\n" +
+    "				</p>\n" +
+    "			</div>\n" +
+    "		</div>\n" +
+    "	</div>\n" +
+    "</section>");
+}]);
 
 angular.module("info.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("info.tpl.html",

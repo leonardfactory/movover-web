@@ -1,0 +1,15 @@
+<section ng-controller="FeedController">
+	<div class="well col-sm-6 col-sm-offset-3" ng-repeat="action in feed">
+		<div class="row">
+			<div class="col-xs-2">
+				<div class="avatar" style="background-image: url({{ action.avatar }});"></div>
+			</div>
+			<div class="col-xs-10">
+				<h4><strong>@{{action.user}}</strong></h4>
+				<p>
+					{{ action.text }}
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
