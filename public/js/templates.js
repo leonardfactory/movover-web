@@ -3,16 +3,45 @@ angular.module('templates-main', ['feed.tpl.html', 'info.tpl.html', 'login.tpl.h
 angular.module("feed.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("feed.tpl.html",
     "<section ng-controller=\"FeedController\">\n" +
-    "	<div class=\"well col-sm-6 col-sm-offset-3\" ng-repeat=\"action in feed\">\n" +
-    "		<div class=\"row\">\n" +
-    "			<div class=\"col-xs-2\">\n" +
-    "				<div class=\"avatar\" style=\"background-image: url({{ action.avatar }});\"></div>\n" +
+    "	<div class=\"col-sm-6 col-sm-offset-3\" ng-repeat=\"action in feed\" ng-switch on=\"action.imagePosted\">\n" +
+    "		<div ng-switch on=\"action.imagePosted\">\n" +
+    "			<div ng-switch-when=\"true\">\n" +
+    "				<div class=\"feed-image img-action\" style=\"background-image: url({{ action._id | imageUrl }});\"></div>\n" +
+    "				<div class=\"feed-item half\">\n" +
+    "					<div class=\"row\">\n" +
+    "						<div class=\"col-xs-2\">\n" +
+    "							<div class=\"avatar\" style=\"background-image: url({{ action.avatar }});\"></div>\n" +
+    "						</div>\n" +
+    "						<div class=\"col-xs-10\">\n" +
+    "							<h4 class=\"username\"><strong>@{{action.user}}</strong></h4>\n" +
+    "							<p>\n" +
+    "								{{ action.text }}\n" +
+    "							</p>\n" +
+    "							<div class=\"description\">\n" +
+    "								<span class=\"glyphicon glyphicon-time\"></span> {{ action.createdOn | human }}\n" +
+    "							</div>\n" +
+    "						</div>\n" +
+    "					</div>\n" +
+    "				</div>\n" +
     "			</div>\n" +
-    "			<div class=\"col-xs-10\">\n" +
-    "				<h4><strong>@{{action.user}}</strong></h4>\n" +
-    "				<p>\n" +
-    "					{{ action.text }}\n" +
-    "				</p>\n" +
+    "		\n" +
+    "			<div ng-switch-when=\"false\">\n" +
+    "				<div class=\"feed-item complete\">\n" +
+    "					<div class=\"row\">\n" +
+    "						<div class=\"col-xs-2\">\n" +
+    "							<div class=\"avatar\" style=\"background-image: url({{ action.avatar }});\"></div>\n" +
+    "						</div>\n" +
+    "						<div class=\"col-xs-10\">\n" +
+    "							<h4 class=\"username\"><strong>@{{action.user}}</strong></h4>\n" +
+    "							<p>\n" +
+    "								{{ action.text }}\n" +
+    "							</p>\n" +
+    "							<div class=\"description\">\n" +
+    "								<span class=\"glyphicon glyphicon-time\"></span> {{ action.createdOn | human }}\n" +
+    "							</div>\n" +
+    "						</div>\n" +
+    "					</div>\n" +
+    "				</div>\n" +
     "			</div>\n" +
     "		</div>\n" +
     "	</div>\n" +

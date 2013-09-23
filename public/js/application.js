@@ -25,7 +25,7 @@ app.controller('FeedController', FeedController = (function() {
           console.log(userData);
           return action.user = userData.user.username;
         });
-        $http.get("/api/user/" + action.subject + "/avatar/72").success(function(userAvatar) {
+        $http.get("/api/user/" + action.subject + "/avatar/60").success(function(userAvatar) {
           return action.avatar = userAvatar.url;
         });
       }
@@ -178,6 +178,18 @@ angular.module('navigation').directive('userLogged', function(auth) {
         return element.css('display', newValue === true ? 'block' : 'none');
       });
     }
+  };
+});
+
+app.filter('human', function() {
+  return function(date) {
+    return moment(date).lang('it').fromNow();
+  };
+});
+
+app.filter('imageUrl', function() {
+  return function(id) {
+    return "http://res.cloudinary.com/hysf85emt/image/upload/h_700,w_700/action_" + id + ".jpg";
   };
 });
 

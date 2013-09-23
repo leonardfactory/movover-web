@@ -16,7 +16,7 @@ app.controller 'FeedController',
 								action.user = userData.user.username
 						
 						$http
-							.get("/api/user/#{action.subject}/avatar/72")
+							.get("/api/user/#{action.subject}/avatar/60")
 							.success (userAvatar) =>
 								action.avatar = userAvatar.url
 					
