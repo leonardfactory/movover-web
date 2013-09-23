@@ -198,6 +198,7 @@ route.config([
     $routeProvider.when('/info', {
       templateUrl: 'info.tpl.html',
       controller: 'InfoController',
+      navName: 'Informazioni Generali',
       access: {
         isFree: false
       }
@@ -212,6 +213,7 @@ route.config([
     $routeProvider.when('/feed', {
       templateUrl: 'feed.tpl.html',
       controller: 'FeedController',
+      navName: 'Attività dell\'Area',
       access: {
         isFree: false
       }
@@ -223,8 +225,9 @@ route.config([
 ]).run(function($rootScope, $location, auth) {
   return $rootScope.$on('$routeChangeStart', function(event, curr, next) {
     if ((curr.access != null) && !curr.access.isFree && !auth.user.logged) {
-      return $location.path('/login');
+      $location.path('/login');
     }
+    return $rootScope.currentPage = curr.navName != null ? curr.navName : 'Informazioni Generali';
   });
 });
 
