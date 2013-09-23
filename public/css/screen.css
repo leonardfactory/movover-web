@@ -79,3 +79,19 @@ body {
   width: 100%;
   height: 300px;
   background-size: cover; }
+
+.area-handle {
+  width: 100%; }
+
+.area-info {
+  width: 50%;
+  display: inline-block !important;
+  vertical-align: middle !important; }
+
+.area-publish {
+  width: 50%;
+  display: inline-block !important;
+  vertical-align: middle !important; }
+
+.form-group.latest {
+  margin-bottom: 0; }

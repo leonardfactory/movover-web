@@ -3,6 +3,31 @@ angular.module('templates-main', ['feed.tpl.html', 'info.tpl.html', 'login.tpl.h
 angular.module("feed.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("feed.tpl.html",
     "<section ng-controller=\"FeedController\">\n" +
+    "	<!-- Post something -->\n" +
+    "	<div class=\"col-sm-6 col-sm-offset-3\">\n" +
+    "		<div class=\"well\">\n" +
+    "			<form class=\"form-horizontal\" role=\"form\">\n" +
+    "				<div class=\"form-group\">\n" +
+    "					<div class=\"col-xs-12\">\n" +
+    "						<label class=\"sr-only\" for=\"actionText\">Testo</label>\n" +
+    "						<input type=\"text\" class=\"form-control\" id=\"actionText\" placeholder=\"Scrivi qualcosa...\">\n" +
+    "					</div>\n" +
+    "				</div>\n" +
+    "				<div class=\"form-group latest\">\n" +
+    "					<div class=\"col-xs-12\">\n" +
+    "						<div class=\"area-info\">\n" +
+    "							<span class=\"glyphicon glyphicon-map-marker\"></span> Bar Mario\n" +
+    "						</div><!--\n" +
+    "						--><div class=\"area-publish\">\n" +
+    "							<button type=\"submit\" class=\"btn btn-success pull-right\">Pubblica</button>\n" +
+    "						</div>\n" +
+    "					</div>\n" +
+    "				</div>\n" +
+    "			</form>\n" +
+    "		</div>\n" +
+    "	</div>\n" +
+    "	\n" +
+    "	<!-- Feed -->\n" +
     "	<div class=\"col-sm-6 col-sm-offset-3\" ng-repeat=\"action in feed\" ng-switch on=\"action.imagePosted\">\n" +
     "		<div ng-switch on=\"action.imagePosted\">\n" +
     "			<div ng-switch-when=\"true\">\n" +

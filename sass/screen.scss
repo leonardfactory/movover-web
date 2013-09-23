@@ -81,3 +81,25 @@ body {
 	height: 300px;
 	background-size: cover;
 }
+
+// Publish
+.area-handle {
+	width: 100%;
+}
+
+.area-info {
+	width: 50%;
+	display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+.area-publish {
+	width: 50%;
+	display: inline-block !important;
+	vertical-align: middle !important;
+}
+
+// Forms
+.form-group.latest {
+	margin-bottom: 0;
+}

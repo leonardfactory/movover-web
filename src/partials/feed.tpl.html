@@ -1,4 +1,29 @@
 <section ng-controller="FeedController">
+	<!-- Post something -->
+	<div class="col-sm-6 col-sm-offset-3">
+		<div class="well">
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					<div class="col-xs-12">
+						<label class="sr-only" for="actionText">Testo</label>
+						<input type="text" class="form-control" id="actionText" placeholder="Scrivi qualcosa...">
+					</div>
+				</div>
+				<div class="form-group latest">
+					<div class="col-xs-12">
+						<div class="area-info">
+							<span class="glyphicon glyphicon-map-marker"></span> Bar Mario
+						</div><!--
+						--><div class="area-publish">
+							<button type="submit" class="btn btn-success pull-right">Pubblica</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	<!-- Feed -->
 	<div class="col-sm-6 col-sm-offset-3" ng-repeat="action in feed" ng-switch on="action.imagePosted">
 		<div ng-switch on="action.imagePosted">
 			<div ng-switch-when="true">
