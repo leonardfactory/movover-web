@@ -12,7 +12,6 @@ app.controller 'InfoController',
 				.success (data) =>
 					@$scope.shop = data
 					@$scope.master = data
-					console.log data
 					
 			# Some fixtures
 			@$scope.title = "InfoController"
