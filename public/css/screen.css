@@ -8,6 +8,9 @@ body {
 .navbar-brand-logo {
   padding: 13px 25px; }
 
+h2 {
+  margin-bottom: 0.8em; }
+
 #map-canvas {
   height: 200px;
   margin-top: 4em;
@@ -96,17 +99,64 @@ body {
 .form-group.latest {
   margin-bottom: 0; }
 
+.shop-item-container {
+  display: inline-block; }
+
 .shop-item {
+  vertical-align: top;
   width: 200px;
   height: 200px;
   display: inline-block;
   box-sizing: border-box;
   margin-right: 1em;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
-  -o-border-radius: 6px;
-  border-radius: 6px;
   background-color: #ecf0f1;
   margin-bottom: 2em;
   padding: 1em; }
+  .shop-item.half {
+    -moz-border-radius-topleft: 6px;
+    -webkit-border-top-left-radius: 6px;
+    border-top-left-radius: 6px;
+    -moz-border-radius-bottomleft: 6px;
+    -webkit-border-bottom-left-radius: 6px;
+    border-bottom-left-radius: 6px; }
+  .shop-item.complete {
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    -o-border-radius: 6px;
+    border-radius: 6px; }
+
+.shop-item-description {
+  vertical-align: top;
+  width: 200px;
+  height: 200px;
+  display: inline-block;
+  box-sizing: border-box;
+  margin-right: 1em;
+  margin-left: -1em;
+  -moz-border-radius-topright: 6px;
+  -webkit-border-top-right-radius: 6px;
+  border-top-right-radius: 6px;
+  -moz-border-radius-bottomright: 6px;
+  -webkit-border-bottom-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  background-color: #ecf0f1;
+  margin-bottom: 2em;
+  padding: 1em; }
+
+.shop-item-adder {
+  font-size: 4em;
+  color: #c3cacc;
+  text-align: center;
+  -webkit-transition: color 0.2s ease-in-out;
+  -moz-transition: color 0.2s ease-in-out;
+  -o-transition: color 0.2s ease-in-out;
+  transition: color 0.2s ease-in-out;
+  -webkit-transition: background-color 0.2s ease-in-out;
+  -moz-transition: background-color 0.2s ease-in-out;
+  -o-transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out; }
+
+.shop-item-adder.hover {
+  color: #00ba73;
+  background-color: #e4eae8; }

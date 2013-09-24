@@ -48,8 +48,7 @@ app.controller('InfoController', InfoController = (function() {
     this.$scope.status = '';
     $http.get("/api/shop/523b2b7194e535b36cbe68dd").success(function(data) {
       _this.$scope.shop = data;
-      _this.$scope.master = data;
-      return console.log(data);
+      return _this.$scope.master = data;
     });
     this.$scope.title = "InfoController";
     this.$scope.reset = function() {
@@ -149,12 +148,31 @@ app.controller('ShopController', ShopController = (function() {
     var _this = this;
     this.$scope = $scope;
     this.$http = $http;
+    this.$scope.added = false;
     this.$scope.refreshShowcase = function() {
       return _this.$http.get("/api/shop/523b2b7194e535b36cbe68dd/showcase").success(function(data) {
         return _this.$scope.showcase = data.showcase;
       });
     };
     this.$scope.refreshShowcase();
+    this.$scope.getBorderClass = function(item) {
+      if (item.editing) {
+        return 'half';
+      } else {
+        return 'complete';
+      }
+    };
+    this.$scope.$watch(function() {
+      return _this.$scope.added;
+    }, function(newVal, oldVal) {
+      if (newVal === true) {
+        _this.$scope.showcase.push({
+          image: _this.$scope.file,
+          editing: true
+        });
+        return _this.$scope.added = false;
+      }
+    });
   }
 
   return ShopController;
@@ -193,6 +211,51 @@ angular.module('navigation').directive('userLogged', function(auth) {
         return auth.user.logged;
       }, function(newValue, oldValue) {
         return element.css('display', newValue === true ? 'block' : 'none');
+      });
+    }
+  };
+});
+
+angular.module('app').directive('droppable', function() {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      element.bind('drop', function(event) {
+        var file, reader;
+        if (event != null) {
+          event.preventDefault();
+        }
+        if (event != null) {
+          event.stopPropagation();
+        }
+        element.removeClass('hover');
+        file = event.originalEvent.dataTransfer.files[0];
+        reader = new FileReader();
+        reader.onload = function(evt) {
+          return scope.$apply(function() {
+            scope.added = true;
+            scope.file = evt.target.result;
+            return scope.fileName = file.name;
+          });
+        };
+        reader.readAsDataURL(file);
+        return false;
+      });
+      element.bind('dragover', function(event) {
+        if (event != null) {
+          event.stopPropagation();
+        }
+        if (event != null) {
+          event.preventDefault();
+        }
+        event.originalEvent.dataTransfer.dropEffect = 'copy';
+        return false;
+      });
+      element.bind('dragenter', function(event) {
+        return element.addClass('hover');
+      });
+      return element.bind('dragleave', function(event) {
+        return element.removeClass('hover');
       });
     }
   };

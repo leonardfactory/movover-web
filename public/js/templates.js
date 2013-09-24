@@ -200,11 +200,31 @@ angular.module("login.tpl.html", []).run(["$templateCache", function($templateCa
 
 angular.module("shop.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("shop.tpl.html",
-    "<section ng-controller=\"ShopController\">\n" +
+    "<section>\n" +
     "	<h2>Vetrina</h2>\n" +
     "	<div class=\"products\">\n" +
-    "		<div class=\"shop-item\" ng-repeat=\"item in showcase\">\n" +
-    "			\n" +
+    "		<div class=\"shop-item-container\" ng-repeat=\"item in showcase\">\n" +
+    "			<div class=\"shop-item\" ng-class=\"getBorderClass(item)\" style=\"background: url('{{ item.image }}') no-repeat center; background-size: cover;\"></div><!--\n" +
+    "			--><div class=\"shop-item-description\" ng-show=\"item.editing\">\n" +
+    "				<form class=\"form-horizontal\">\n" +
+    "					<fieldset>\n" +
+    "						<div class=\"form-group\">\n" +
+    "							<div class=\"col-sm-12\">\n" +
+    "								<input type=\"text\" class=\"form-control\" placeholder=\"Nome...\" />\n" +
+    "							</div>\n" +
+    "						</div>\n" +
+    "						<div class=\"form-group\">\n" +
+    "							<div class=\"col-sm-12\">\n" +
+    "								<input type=\"text\" class=\"form-control\" placeholder=\"Prezzo...\" />\n" +
+    "							</div>\n" +
+    "						</div>\n" +
+    "						<button type=\"submit\" class=\"btn btn-success\">Salva</button>\n" +
+    "					</fieldset>\n" +
+    "				</form>\n" +
+    "			</div>\n" +
+    "		</div>\n" +
+    "		<div class=\"shop-item complete shop-item-adder\" droppable>\n" +
+    "			<span class=\"glyphicon glyphicon-open\"></span>\n" +
     "		</div>\n" +
     "	</div>\n" +
     "</section>");

@@ -1,8 +1,28 @@
-<section ng-controller="ShopController">
+<section>
 	<h2>Vetrina</h2>
 	<div class="products">
-		<div class="shop-item" ng-repeat="item in showcase">
-			
+		<div class="shop-item-container" ng-repeat="item in showcase">
+			<div class="shop-item" ng-class="getBorderClass(item)" style="background: url('{{ item.image }}') no-repeat center; background-size: cover;"></div><!--
+			--><div class="shop-item-description" ng-show="item.editing">
+				<form class="form-horizontal">
+					<fieldset>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input type="text" class="form-control" placeholder="Nome..." />
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input type="text" class="form-control" placeholder="Prezzo..." />
+							</div>
+						</div>
+						<button type="submit" class="btn btn-success">Salva</button>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+		<div class="shop-item complete shop-item-adder" droppable>
+			<span class="glyphicon glyphicon-open"></span>
 		</div>
 	</div>
 </section>

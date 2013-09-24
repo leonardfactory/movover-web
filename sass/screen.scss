@@ -4,6 +4,7 @@
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
 
 @import "compass/css3/border-radius";
+@import "compass/css3/transition";
 
 // Body
 body {
@@ -13,6 +14,11 @@ body {
 // Logo
 .navbar-brand-logo {
 	padding: 13px 25px;
+}
+
+// General
+h2 {
+	margin-bottom: 0.8em;
 }
 
 // Maps
@@ -105,7 +111,14 @@ body {
 }
 
 // Showcase
+.shop-item-container {
+	display: inline-block;
+}
+
 .shop-item {
+	// Prevent blocks from "falling"
+	vertical-align: top;
+	
 	width: 200px;
 	height: 200px;
 	display: inline-block;
@@ -113,9 +126,46 @@ body {
 	
 	margin-right: 1em;
 	
-	@include border-radius(6px);
+	background-color: #ecf0f1;
+	margin-bottom: 2em;
+	padding: 1em;
+	
+	&.half {
+		@include border-left-radius(6px);
+	}
+	
+	&.complete {
+		@include border-radius(6px);
+	}
+}
+
+.shop-item-description {
+	vertical-align: top;
+	
+	width: 200px;
+	height: 200px;
+	display: inline-block;
+	box-sizing: border-box;
+	
+	margin-right: 1em;
+	margin-left: -1em; // Side by side with its shop item
+	
+	@include border-right-radius(6px);
 	
 	background-color: #ecf0f1;
 	margin-bottom: 2em;
 	padding: 1em;
+}
+
+.shop-item-adder {
+	font-size: 4em;
+	color: #c3cacc;
+	text-align: center;
+	@include transition(color 0.2s ease-in-out);
+	@include transition(background-color 0.2s ease-in-out);
+}
+
+.shop-item-adder.hover {
+	color: #00ba73;
+	background-color: #e4eae8;
 }
