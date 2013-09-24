@@ -17,6 +17,12 @@ module.exports = function(grunt) {
 				}]
 			}
 		},
+		concat: {
+			js_libs: {
+				src: 'public/js/libs/jquery.*.js',
+				dest: 'public/js/libs/jquery-plugins.js'
+			}
+		},
 		coffee: {
 			compileJoined: {
 				options: {
@@ -50,16 +56,21 @@ module.exports = function(grunt) {
 			sass_styles: {
 				files: 'sass/*.scss',
 				tasks: ['sass']
+			},
+			js_libs: {
+				files: 'public/js/jquery.*.js',
+				tasks: ['concat']
 			}
 		}
 	});
 
 	// Load the plugins
+	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-coffee');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-html2js');
 
 	// Default task(s).
-	grunt.registerTask('default', ['sass', 'coffee', 'html2js']);
+	grunt.registerTask('default', ['sass', 'coffee', 'html2js', 'concat']);
 };
