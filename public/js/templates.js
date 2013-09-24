@@ -1,4 +1,4 @@
-angular.module('templates-main', ['feed.tpl.html', 'info.tpl.html', 'login.tpl.html']);
+angular.module('templates-main', ['feed.tpl.html', 'info.tpl.html', 'login.tpl.html', 'shop.tpl.html']);
 
 angular.module("feed.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("feed.tpl.html",
@@ -196,4 +196,16 @@ angular.module("login.tpl.html", []).run(["$templateCache", function($templateCa
     "	</div>\n" +
     "</section>\n" +
     "");
+}]);
+
+angular.module("shop.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("shop.tpl.html",
+    "<section ng-controller=\"ShopController\">\n" +
+    "	<h2>Vetrina</h2>\n" +
+    "	<div class=\"products\">\n" +
+    "		<div class=\"shop-item\" ng-repeat=\"item in showcase\">\n" +
+    "			\n" +
+    "		</div>\n" +
+    "	</div>\n" +
+    "</section>");
 }]);

@@ -21,6 +21,13 @@ route
 				access:
 					isFree: false
 			)
+			$routeProvider.when('/shop',
+				templateUrl: 'shop.tpl.html'
+				controller: 'ShopController'
+				navName: 'Vetrina e Prodotti'
+				access:
+					isFree: false
+			)
 			$routeProvider.otherwise redirectTo: '/login'
 	])
 	# Checks for unavailable paths (auth required)

@@ -1,4 +1,4 @@
-var Adapter, Auth, FeedController, InfoController, LoginController, NavigationController, app, controller, navigation, route,
+var Adapter, Auth, FeedController, InfoController, LoginController, NavigationController, ShopController, app, controller, navigation, route,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
@@ -144,6 +144,23 @@ app.controller('NavigationController', NavigationController = (function() {
 
 })());
 
+app.controller('ShopController', ShopController = (function() {
+  function ShopController($scope, $http) {
+    var _this = this;
+    this.$scope = $scope;
+    this.$http = $http;
+    this.$scope.refreshShowcase = function() {
+      return _this.$http.get("/api/shop/523b2b7194e535b36cbe68dd/showcase").success(function(data) {
+        return _this.$scope.showcase = data.showcase;
+      });
+    };
+    this.$scope.refreshShowcase();
+  }
+
+  return ShopController;
+
+})());
+
 angular.module('navigation').directive('navigationBar', function($location) {
   return {
     restrict: 'A',
@@ -214,6 +231,14 @@ route.config([
       templateUrl: 'feed.tpl.html',
       controller: 'FeedController',
       navName: 'Attività dell\'Area',
+      access: {
+        isFree: false
+      }
+    });
+    $routeProvider.when('/shop', {
+      templateUrl: 'shop.tpl.html',
+      controller: 'ShopController',
+      navName: 'Vetrina e Prodotti',
       access: {
         isFree: false
       }

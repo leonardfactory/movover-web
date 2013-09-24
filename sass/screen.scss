@@ -103,3 +103,19 @@ body {
 .form-group.latest {
 	margin-bottom: 0;
 }
+
+// Showcase
+.shop-item {
+	width: 200px;
+	height: 200px;
+	display: inline-block;
+	box-sizing: border-box;
+	
+	margin-right: 1em;
+	
+	@include border-radius(6px);
+	
+	background-color: #ecf0f1;
+	margin-bottom: 2em;
+	padding: 1em;
+}

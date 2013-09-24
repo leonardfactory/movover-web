@@ -95,3 +95,18 @@ body {
 
 .form-group.latest {
   margin-bottom: 0; }
+
+.shop-item {
+  width: 200px;
+  height: 200px;
+  display: inline-block;
+  box-sizing: border-box;
+  margin-right: 1em;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  background-color: #ecf0f1;
+  margin-bottom: 2em;
+  padding: 1em; }
