@@ -10,6 +10,10 @@ route = angular.module('route', ['templates-main']);
 
 app = angular.module('app', ['navigation', 'controller', 'route', 'ngCookies']);
 
+app.config(function($httpProvider) {
+  return $httpProvider.defaults.useXDomain = true;
+});
+
 app.controller('FeedController', FeedController = (function() {
   function FeedController($scope, $http, auth) {
     var _this = this;
@@ -157,13 +161,14 @@ app.controller('NavigationController', NavigationController = (function() {
 })());
 
 app.controller('ShopController', ShopController = (function() {
-  function ShopController($scope, $http) {
+  function ShopController($scope, $http, auth) {
     var _this = this;
     this.$scope = $scope;
     this.$http = $http;
+    this.auth = auth;
     this.$scope.added = false;
     this.$scope.refreshShowcase = function() {
-      return _this.$http.get("/api/shop/523b2b7194e535b36cbe68dd/showcase").success(function(data) {
+      return _this.$http.get("/api/shop/523b2b7194e535b36cbe68dd/showcase", _this.auth.getConfigHeaders()).success(function(data) {
         return _this.$scope.showcase = data.showcase;
       });
     };
@@ -188,17 +193,50 @@ app.controller('ShopController', ShopController = (function() {
       }
     });
     this.$scope.save = function(item) {
-      return _this.$http.post("/api/shopItem", item).success(function(data) {
+      return _this.$http.post("/api/shopItem", item, _this.auth.getConfigHeaders()).success(function(data) {
         item._id = data.id;
         return _this.$scope.uploadImage(item);
       });
     };
     this.$scope.uploadImage = function(item) {
-      return _this.$http.get("/api/shopItem/" + item._id + "/signature").success(function(data) {
-        var form;
-        return form = $('<form id="upload_image" style="visibility: hidden;"></form>').append($('<input name="file" type="file" \
-		       		 			  						class="cloudinary-fileupload" data-cloudinary-field="image_upload" \
-		       					  						data-form-data=\'' + JSON.stringify(data) + '\'></input>')).appendTo('body');
+      return _this.$http.get("/api/shopItem/" + item._id + "/signature", _this.auth.getConfigHeaders()).success(function(data) {
+        /*
+        						form = $('<form id="upload_image" style="visibility: hidden;"></form>')
+        									.append($('<input name="file" type="file" 
+        		       		 			  						class="cloudinary-fileupload" data-cloudinary-field="image_upload" 
+        		       					  						data-form-data=\'' + JSON.stringify(data) + '\'></input>'))
+        								 	.appendTo 'body'
+        						
+        						$('#upload_image').fileupload({
+        						    add: function (e, data) {
+        								data.formData = data;
+        						        data.submit();
+        						    } 
+        						});
+        						#form.submit()
+        */
+
+        var dataItem, dataName, formData;
+        console.log(data);
+        formData = new FormData();
+        for (dataName in data) {
+          dataItem = data[dataName];
+          formData.append(dataName, dataItem);
+        }
+        formData.append('file', item.image);
+        console.log(formData);
+        return $.ajax({
+          url: "https://api.cloudinary.com/v1_1/hysf85emt/image/upload",
+          data: formData,
+          processData: false,
+          contentType: false,
+          type: 'POST',
+          success: function(data) {
+            return console.log(data);
+          }
+        });
+      }).error(function(data) {
+        return console.log(data);
       });
     };
   }

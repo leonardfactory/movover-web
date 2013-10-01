@@ -1,12 +1,12 @@
 app.controller 'ShopController',
 	class ShopController
-		constructor: (@$scope, @$http) ->
+		constructor: (@$scope, @$http, @auth) ->
 			
 			@$scope.added = false
 			
 			@$scope.refreshShowcase = =>
 				@$http
-					.get("/api/shop/523b2b7194e535b36cbe68dd/showcase")
+					.get("/api/shop/523b2b7194e535b36cbe68dd/showcase", @auth.getConfigHeaders())
 					.success (data) =>
 						@$scope.showcase = data.showcase
 			
@@ -39,7 +39,7 @@ app.controller 'ShopController',
 			# Save one item
 			@$scope.save = (item) =>
 				@$http
-					.post("/api/shopItem", item)
+					.post("/api/shopItem", item, @auth.getConfigHeaders())
 					.success (data) =>
 						item._id = data.id
 						@$scope.uploadImage(item)
@@ -47,14 +47,47 @@ app.controller 'ShopController',
 			# Upload image for one item
 			@$scope.uploadImage = (item) =>
 				@$http
-					.get("/api/shopItem/#{item._id}/signature")
+					.get("/api/shopItem/#{item._id}/signature", @auth.getConfigHeaders())
 					.success (data) =>
-						# Create a new form to handle only this upload
+						# Create a new form to handle only this upload. Thefuck?
+						###
 						form = $('<form id="upload_image" style="visibility: hidden;"></form>')
 									.append($('<input name="file" type="file" 
 		       		 			  						class="cloudinary-fileupload" data-cloudinary-field="image_upload" 
 		       					  						data-form-data=\'' + JSON.stringify(data) + '\'></input>'))
 								 	.appendTo 'body'
 						
-						#$('#upload_image').
+						$('#upload_image').fileupload({
+						    add: function (e, data) {
+								data.formData = data;
+						        data.submit();
+						    } 
+						});
 						#form.submit()
+						###
+						
+						console.log data
+						
+						formData = new FormData()
+						formData.append(dataName, dataItem) for dataName, dataItem of data
+						formData.append('file', item.image)
+						
+						console.log formData
+						
+						$.ajax {
+							url: "https://api.cloudinary.com/v1_1/hysf85emt/image/upload"
+							data: formData
+							processData: false
+							contentType: false
+							type: 'POST'
+							success: (data) ->
+								console.log data
+						}
+						
+						#$.post("https://api.cloudinary.com/v1_1/hysf85emt/image/upload", formData)
+						#	.success (data) =>
+						#		console.log data
+								
+					.error (data) =>
+						console.log data
+						
