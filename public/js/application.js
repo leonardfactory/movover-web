@@ -180,6 +180,17 @@ app.controller('ShopController', ShopController = (function() {
         return 'complete';
       }
     };
+    this.$scope.getImageURL = function(item) {
+      if (item.image != null) {
+        return item.image;
+      } else {
+        return $.cloudinary.url('shop_item_' + item._id, {
+          width: 200,
+          height: 200,
+          format: 'jpg'
+        });
+      }
+    };
     this.$scope.$watch(function() {
       return _this.$scope.added;
     }, function(newVal, oldVal) {
@@ -200,40 +211,20 @@ app.controller('ShopController', ShopController = (function() {
     };
     this.$scope.uploadImage = function(item) {
       return _this.$http.get("/api/shopItem/" + item._id + "/signature", _this.auth.getConfigHeaders()).success(function(data) {
-        /*
-        						form = $('<form id="upload_image" style="visibility: hidden;"></form>')
-        									.append($('<input name="file" type="file" 
-        		       		 			  						class="cloudinary-fileupload" data-cloudinary-field="image_upload" 
-        		       					  						data-form-data=\'' + JSON.stringify(data) + '\'></input>'))
-        								 	.appendTo 'body'
-        						
-        						$('#upload_image').fileupload({
-        						    add: function (e, data) {
-        								data.formData = data;
-        						        data.submit();
-        						    } 
-        						});
-        						#form.submit()
-        */
-
         var dataItem, dataName, formData;
-        console.log(data);
         formData = new FormData();
         for (dataName in data) {
           dataItem = data[dataName];
           formData.append(dataName, dataItem);
         }
         formData.append('file', item.image);
-        console.log(formData);
         return $.ajax({
           url: "https://api.cloudinary.com/v1_1/hysf85emt/image/upload",
           data: formData,
           processData: false,
           contentType: false,
           type: 'POST',
-          success: function(data) {
-            return console.log(data);
-          }
+          success: function(data) {}
         });
       }).error(function(data) {
         return console.log(data);

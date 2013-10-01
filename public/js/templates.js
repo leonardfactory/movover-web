@@ -209,7 +209,7 @@ angular.module("shop.tpl.html", []).run(["$templateCache", function($templateCac
     "	<h2>Vetrina</h2>\n" +
     "	<div class=\"products\">\n" +
     "		<div class=\"shop-item-container\" ng-repeat=\"item in showcase\">\n" +
-    "			<div class=\"shop-item\" ng-class=\"getBorderClass(item)\" style=\"background: url('{{ item.image }}') no-repeat center; background-size: cover;\"></div><!--\n" +
+    "			<div class=\"shop-item\" ng-class=\"getBorderClass(item)\" ng-style=\"{ 'background' : 'url(' + getImageURL(item) + ')', 'background-size' : 'cover' }\"></div><!--\n" +
     "			--><div class=\"shop-item-description\" ng-show=\"item.editing\">\n" +
     "				<form class=\"form-horizontal\">\n" +
     "					<fieldset>\n" +

@@ -2,7 +2,7 @@
 	<h2>Vetrina</h2>
 	<div class="products">
 		<div class="shop-item-container" ng-repeat="item in showcase">
-			<div class="shop-item" ng-class="getBorderClass(item)" style="background: url('{{ item.image }}') no-repeat center; background-size: cover;"></div><!--
+			<div class="shop-item" ng-class="getBorderClass(item)" ng-style="{ 'background' : 'url(' + getImageURL(item) + ')', 'background-size' : 'cover' }"></div><!--
 			--><div class="shop-item-description" ng-show="item.editing">
 				<form class="form-horizontal">
 					<fieldset>

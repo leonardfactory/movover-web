@@ -19,6 +19,10 @@ app.controller 'ShopController',
 					'half'
 				else
 					'complete'
+				
+			# Return image path
+			@$scope.getImageURL = (item) ->
+				if item.image? then item.image else $.cloudinary.url('shop_item_' + item._id, { width: 200, height: 200, format: 'jpg' })
 			
 			@$scope.$watch(
 				=> @$scope.added
@@ -49,30 +53,10 @@ app.controller 'ShopController',
 				@$http
 					.get("/api/shopItem/#{item._id}/signature", @auth.getConfigHeaders())
 					.success (data) =>
-						# Create a new form to handle only this upload. Thefuck?
-						###
-						form = $('<form id="upload_image" style="visibility: hidden;"></form>')
-									.append($('<input name="file" type="file" 
-		       		 			  						class="cloudinary-fileupload" data-cloudinary-field="image_upload" 
-		       					  						data-form-data=\'' + JSON.stringify(data) + '\'></input>'))
-								 	.appendTo 'body'
-						
-						$('#upload_image').fileupload({
-						    add: function (e, data) {
-								data.formData = data;
-						        data.submit();
-						    } 
-						});
-						#form.submit()
-						###
-						
-						console.log data
-						
+						# Currently supporting only CORS + FormData. Some browsers are out.
 						formData = new FormData()
 						formData.append(dataName, dataItem) for dataName, dataItem of data
 						formData.append('file', item.image)
-						
-						console.log formData
 						
 						$.ajax {
 							url: "https://api.cloudinary.com/v1_1/hysf85emt/image/upload"
@@ -81,7 +65,7 @@ app.controller 'ShopController',
 							contentType: false
 							type: 'POST'
 							success: (data) ->
-								console.log data
+								# console.log data
 						}
 						
 						#$.post("https://api.cloudinary.com/v1_1/hysf85emt/image/upload", formData)
