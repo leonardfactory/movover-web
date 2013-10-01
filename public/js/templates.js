@@ -184,6 +184,11 @@ angular.module("login.tpl.html", []).run(["$templateCache", function($templateCa
     "	            <div class=\"form-group\" ng-class=\"{ 'has-error' : isInvalid('password') }\">\n" +
     "	                <div class=\"col-md-12\">\n" +
     "						 <input type=\"text\" class=\"form-control\" placeholder=\"Password\" ng-model=\"user.password\">\n" +
+    "						 <div class=\"checkbox\">\n" +
+    "							 <label>\n" +
+    "								 <input type=\"checkbox\" ng-model=\"remember\"> Ricordami\n" +
+    "							 </label>\n" +
+    "						 </div>\n" +
     "	                </div>\n" +
     "	            </div>\n" +
     "				<div class=\"form-group\">\n" +
@@ -210,15 +215,15 @@ angular.module("shop.tpl.html", []).run(["$templateCache", function($templateCac
     "					<fieldset>\n" +
     "						<div class=\"form-group\">\n" +
     "							<div class=\"col-sm-12\">\n" +
-    "								<input type=\"text\" class=\"form-control\" placeholder=\"Nome...\" />\n" +
+    "								<input type=\"text\" class=\"form-control\" ng-model=\"item.name\" placeholder=\"Nome...\" />\n" +
     "							</div>\n" +
     "						</div>\n" +
     "						<div class=\"form-group\">\n" +
     "							<div class=\"col-sm-12\">\n" +
-    "								<input type=\"text\" class=\"form-control\" placeholder=\"Prezzo...\" />\n" +
+    "								<input type=\"text\" class=\"form-control\" ng-model=\"item.price\" placeholder=\"Prezzo...\" />\n" +
     "							</div>\n" +
     "						</div>\n" +
-    "						<button type=\"submit\" class=\"btn btn-success\">Salva</button>\n" +
+    "						<button type=\"submit\" class=\"btn btn-success\" ng-click=\"save(item)\">Salva</button>\n" +
     "					</fieldset>\n" +
     "				</form>\n" +
     "			</div>\n" +

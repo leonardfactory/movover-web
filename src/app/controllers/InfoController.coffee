@@ -1,6 +1,6 @@
 app.controller 'InfoController', 
 	class InfoController
-		constructor: (@$scope, @$http, @adapter) ->
+		constructor: (@$scope, @$http, @adapter, @auth) ->
 			# Master copy
 			@$scope.master = {}
 			@$scope.errors = []
@@ -8,7 +8,7 @@ app.controller 'InfoController',
 			
 			# Load data from server
 			$http
-				.get("/api/shop/523b2b7194e535b36cbe68dd")
+				.get("/api/shop/523b2b7194e535b36cbe68dd", @auth.getConfigHeaders())
 				.success (data) =>
 					@$scope.shop = data
 					@$scope.master = data
@@ -21,7 +21,7 @@ app.controller 'InfoController',
 		
 			@$scope.update = =>
 				$http
-					.post("/api/shop/523b2b7194e535b36cbe68dd", @$scope.shop)
+					.post("/api/shop/523b2b7194e535b36cbe68dd", @$scope.shop, @auth.getConfigHeaders())
 					.success (data) =>
 						@$scope.errors = []
 						@$scope.master = angular.copy(@$scope.shop)

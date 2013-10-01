@@ -26,6 +26,7 @@ app.controller 'ShopController',
 					if newVal is true
 						@$scope.showcase.push {
 							image : @$scope.file,
+							shop : "523b2b7194e535b36cbe68dd"
 							editing : true
 						}
 						@$scope.added = false
@@ -34,4 +35,26 @@ app.controller 'ShopController',
 					#else
 					#	@$scope.addShopItemBackground = ''
 			)
-			# RNDDNL60P58H501U
+			
+			# Save one item
+			@$scope.save = (item) =>
+				@$http
+					.post("/api/shopItem", item)
+					.success (data) =>
+						item._id = data.id
+						@$scope.uploadImage(item)
+			
+			# Upload image for one item
+			@$scope.uploadImage = (item) =>
+				@$http
+					.get("/api/shopItem/#{item._id}/signature")
+					.success (data) =>
+						# Create a new form to handle only this upload
+						form = $('<form id="upload_image" style="visibility: hidden;"></form>')
+									.append($('<input name="file" type="file" 
+		       		 			  						class="cloudinary-fileupload" data-cloudinary-field="image_upload" 
+		       					  						data-form-data=\'' + JSON.stringify(data) + '\'></input>'))
+								 	.appendTo 'body'
+						
+						#$('#upload_image').
+						#form.submit()

@@ -11,21 +11,22 @@ route = angular.module('route', ['templates-main']);
 app = angular.module('app', ['navigation', 'controller', 'route', 'ngCookies']);
 
 app.controller('FeedController', FeedController = (function() {
-  function FeedController($scope, $http) {
+  function FeedController($scope, $http, auth) {
     var _this = this;
     this.$scope = $scope;
     this.$http = $http;
+    this.auth = auth;
     this.$scope.feed = [];
-    $http.get('/api/area/522495d887789a8a0350e81a/actions').success(function(data) {
+    $http.get('/api/area/522495d887789a8a0350e81a/actions', this.auth.getConfigHeaders()).success(function(data) {
       var action, actions, _i, _len;
       actions = data.actions;
       for (_i = 0, _len = actions.length; _i < _len; _i++) {
         action = actions[_i];
-        $http.get("/api/user/" + action.subject + "/profile").success(function(userData) {
+        $http.get("/api/user/" + action.subject + "/profile", _this.auth.getConfigHeaders()).success(function(userData) {
           console.log(userData);
           return action.user = userData.user.username;
         });
-        $http.get("/api/user/" + action.subject + "/avatar/60").success(function(userAvatar) {
+        $http.get("/api/user/" + action.subject + "/avatar/60", _this.auth.getConfigHeaders()).success(function(userAvatar) {
           return action.avatar = userAvatar.url;
         });
       }
@@ -38,15 +39,16 @@ app.controller('FeedController', FeedController = (function() {
 })());
 
 app.controller('InfoController', InfoController = (function() {
-  function InfoController($scope, $http, adapter) {
+  function InfoController($scope, $http, adapter, auth) {
     var _this = this;
     this.$scope = $scope;
     this.$http = $http;
     this.adapter = adapter;
+    this.auth = auth;
     this.$scope.master = {};
     this.$scope.errors = [];
     this.$scope.status = '';
-    $http.get("/api/shop/523b2b7194e535b36cbe68dd").success(function(data) {
+    $http.get("/api/shop/523b2b7194e535b36cbe68dd", this.auth.getConfigHeaders()).success(function(data) {
       _this.$scope.shop = data;
       return _this.$scope.master = data;
     });
@@ -55,7 +57,7 @@ app.controller('InfoController', InfoController = (function() {
       return _this.$scope.shop = angular.copy(_this.$scope.master);
     };
     this.$scope.update = function() {
-      return $http.post("/api/shop/523b2b7194e535b36cbe68dd", _this.$scope.shop).success(function(data) {
+      return $http.post("/api/shop/523b2b7194e535b36cbe68dd", _this.$scope.shop, _this.auth.getConfigHeaders()).success(function(data) {
         _this.$scope.errors = [];
         _this.$scope.master = angular.copy(_this.$scope.shop);
         return _this.$scope.status = 'success';
@@ -82,15 +84,18 @@ app.controller('InfoController', InfoController = (function() {
 })());
 
 app.controller('LoginController', LoginController = (function() {
-  function LoginController($scope, $location, $http, auth) {
+  function LoginController($scope, $location, $http, $cookies, auth) {
     var _this = this;
     this.$scope = $scope;
     this.$location = $location;
     this.$http = $http;
+    this.$cookies = $cookies;
     this.$scope.user = {
       username: '',
-      password: ''
+      password: '',
+      grant_type: 'password'
     };
+    this.$scope.remember = false;
     this.$scope.error = false;
     this.$scope.checkUser = true;
     auth.isUserLogged();
@@ -107,10 +112,18 @@ app.controller('LoginController', LoginController = (function() {
       return _this.$scope.checkUser = auth.checking;
     });
     this.$scope.login = function() {
-      return $http.post("/api/user/login", _this.$scope.user).success(function(data) {
+      return $http.post("/api/user/token", _this.$scope.user).success(function(data) {
         auth.user.logged = true;
-        auth.user.id = data._id;
-        return _this.$location.path('/info');
+        auth.user.token = data.access_token;
+        return $http.get("/api/user/check", auth.getConfigHeaders()).success(function(data) {
+          auth.user.id = data._id;
+          if (_this.$scope.remember) {
+            _this.$cookies.token = auth.user.token;
+          }
+          return _this.$location.path('/info');
+        }).error(function(data) {
+          return _this.$scope.error = true;
+        });
       }).error(function(data) {
         return _this.$scope.error = true;
       });
@@ -122,20 +135,20 @@ app.controller('LoginController', LoginController = (function() {
 })());
 
 app.controller('NavigationController', NavigationController = (function() {
-  function NavigationController($scope, $http, $location, auth) {
+  function NavigationController($scope, $http, $location, auth, $cookies) {
     var _this = this;
     this.$scope = $scope;
     this.$http = $http;
     this.$location = $location;
+    this.$cookies = $cookies;
     this.$scope.logout = function() {
       if (auth.user.logged) {
-        return $http.get("/api/user/logout").success(function(data) {
-          auth.user.logged = false;
-          return $location.path('/login');
-        }).error(function(data) {
-          return console.log(data);
-        });
+        auth.user.logged = false;
       }
+      if (_this.$cookies.token) {
+        delete _this.$cookies.token;
+      }
+      return $location.path('/login');
     };
   }
 
@@ -168,11 +181,26 @@ app.controller('ShopController', ShopController = (function() {
       if (newVal === true) {
         _this.$scope.showcase.push({
           image: _this.$scope.file,
+          shop: "523b2b7194e535b36cbe68dd",
           editing: true
         });
         return _this.$scope.added = false;
       }
     });
+    this.$scope.save = function(item) {
+      return _this.$http.post("/api/shopItem", item).success(function(data) {
+        item._id = data.id;
+        return _this.$scope.uploadImage(item);
+      });
+    };
+    this.$scope.uploadImage = function(item) {
+      return _this.$http.get("/api/shopItem/" + item._id + "/signature").success(function(data) {
+        var form;
+        return form = $('<form id="upload_image" style="visibility: hidden;"></form>').append($('<input name="file" type="file" \
+		       		 			  						class="cloudinary-fileupload" data-cloudinary-field="image_upload" \
+		       					  						data-form-data=\'' + JSON.stringify(data) + '\'></input>')).appendTo('body');
+      });
+    };
   }
 
   return ShopController;
@@ -322,7 +350,6 @@ route.config([
 app.service('adapter', Adapter = (function() {
   function Adapter($http) {
     this.$http = $http;
-    this.path = 'http://localhost:8080/';
   }
 
   return Adapter;
@@ -330,26 +357,45 @@ app.service('adapter', Adapter = (function() {
 })());
 
 app.service('auth', Auth = (function() {
-  function Auth($http) {
+  function Auth($http, $cookies) {
     this.$http = $http;
+    this.$cookies = $cookies;
     this.isUserLogged = __bind(this.isUserLogged, this);
+    this.getConfigHeaders = __bind(this.getConfigHeaders, this);
     this.user = {
+      token: '',
       logged: false,
       id: null
     };
     this.checking = false;
   }
 
+  Auth.prototype.getConfigHeaders = function() {
+    var headers;
+    headers = {};
+    if (this.user.token !== '') {
+      headers['Authorization'] = "Bearer " + this.user.token;
+    }
+    return {
+      headers: headers
+    };
+  };
+
   Auth.prototype.isUserLogged = function() {
     var _this = this;
     this.checking = true;
-    return this.$http.get("/api/user/check").success(function(data) {
-      _this.user.logged = true;
-      _this.user.id = data._id;
-      return _this.checking = false;
-    }).error(function(data) {
-      return _this.checking = false;
-    });
+    if (this.$cookies.token) {
+      this.user.token = this.$cookies.token;
+      return this.$http.get("/api/user/check", this.getConfigHeaders()).success(function(data) {
+        _this.user.logged = true;
+        _this.user.id = data._id;
+        return _this.checking = false;
+      }).error(function(data) {
+        return _this.checking = false;
+      });
+    } else {
+      return this.checking = false;
+    }
   };
 
   return Auth;
