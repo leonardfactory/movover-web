@@ -2,7 +2,7 @@
 	<h2>Vetrina</h2>
 	<div class="products">
 		<div class="shop-item-container" ng-repeat="item in showcase">
-			<div class="shop-item" ng-class="getBorderClass(item)" ng-style="{ 'background' : 'url(' + getImageURL(item) + ')', 'background-size' : 'cover' }"></div><!--
+			<div class="shop-item" ng-click="startEditing(item)" ng-class="getBorderClass(item)" ng-style="{ 'background' : 'url(' + getImageURL(item) + ')', 'background-size' : 'cover' }"></div><!--
 			--><div class="shop-item-description" ng-show="item.editing">
 				<form class="form-horizontal">
 					<fieldset>
@@ -13,10 +13,21 @@
 						</div>
 						<div class="form-group">
 							<div class="col-sm-12">
-								<input type="text" class="form-control" ng-model="item.price" placeholder="Prezzo..." />
+								<div class="input-group">
+									<span class="input-group-addon">&euro;</span>
+									<input type="text" class="form-control" ng-model="item.price" placeholder="Prezzo..." />
+								</div>
 							</div>
 						</div>
-						<button type="submit" class="btn btn-success" ng-click="save(item)">Salva</button>
+						<div ng-switch on="item.disabled">
+							<div ng-switch-when="true">
+								<button type="submit" class="btn btn-default" ng-disabled="item.disabled">Attendi..</button>
+							</div>
+							<div ng-switch-when="false">
+								<button type="submit" class="btn btn-success" ng-disabled="item.disabled" ng-click="save(item)">Salva</button>
+								<button type="submit" class="btn btn-default" ng-disabled="item.disabled" ng-click="delete(item)">Elimina</button>
+							</div>
+						</div>
 					</fieldset>
 				</form>
 			</div>

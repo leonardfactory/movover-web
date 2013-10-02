@@ -209,7 +209,7 @@ angular.module("shop.tpl.html", []).run(["$templateCache", function($templateCac
     "	<h2>Vetrina</h2>\n" +
     "	<div class=\"products\">\n" +
     "		<div class=\"shop-item-container\" ng-repeat=\"item in showcase\">\n" +
-    "			<div class=\"shop-item\" ng-class=\"getBorderClass(item)\" ng-style=\"{ 'background' : 'url(' + getImageURL(item) + ')', 'background-size' : 'cover' }\"></div><!--\n" +
+    "			<div class=\"shop-item\" ng-click=\"startEditing(item)\" ng-class=\"getBorderClass(item)\" ng-style=\"{ 'background' : 'url(' + getImageURL(item) + ')', 'background-size' : 'cover' }\"></div><!--\n" +
     "			--><div class=\"shop-item-description\" ng-show=\"item.editing\">\n" +
     "				<form class=\"form-horizontal\">\n" +
     "					<fieldset>\n" +
@@ -220,10 +220,21 @@ angular.module("shop.tpl.html", []).run(["$templateCache", function($templateCac
     "						</div>\n" +
     "						<div class=\"form-group\">\n" +
     "							<div class=\"col-sm-12\">\n" +
-    "								<input type=\"text\" class=\"form-control\" ng-model=\"item.price\" placeholder=\"Prezzo...\" />\n" +
+    "								<div class=\"input-group\">\n" +
+    "									<span class=\"input-group-addon\">&euro;</span>\n" +
+    "									<input type=\"text\" class=\"form-control\" ng-model=\"item.price\" placeholder=\"Prezzo...\" />\n" +
+    "								</div>\n" +
     "							</div>\n" +
     "						</div>\n" +
-    "						<button type=\"submit\" class=\"btn btn-success\" ng-click=\"save(item)\">Salva</button>\n" +
+    "						<div ng-switch on=\"item.disabled\">\n" +
+    "							<div ng-switch-when=\"true\">\n" +
+    "								<button type=\"submit\" class=\"btn btn-default\" ng-disabled=\"item.disabled\">Attendi..</button>\n" +
+    "							</div>\n" +
+    "							<div ng-switch-when=\"false\">\n" +
+    "								<button type=\"submit\" class=\"btn btn-success\" ng-disabled=\"item.disabled\" ng-click=\"save(item)\">Salva</button>\n" +
+    "								<button type=\"submit\" class=\"btn btn-default\" ng-disabled=\"item.disabled\" ng-click=\"delete(item)\">Elimina</button>\n" +
+    "							</div>\n" +
+    "						</div>\n" +
     "					</fieldset>\n" +
     "				</form>\n" +
     "			</div>\n" +

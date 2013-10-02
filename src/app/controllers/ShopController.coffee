@@ -9,6 +9,7 @@ app.controller 'ShopController',
 					.get("/api/shop/523b2b7194e535b36cbe68dd/showcase", @auth.getConfigHeaders())
 					.success (data) =>
 						@$scope.showcase = data.showcase
+						item.disabled = false for item in @$scope.showcase
 			
 			# Load data from database
 			@$scope.refreshShowcase()
@@ -29,7 +30,8 @@ app.controller 'ShopController',
 				(newVal, oldVal) =>
 					if newVal is true
 						@$scope.showcase.push {
-							image : @$scope.file,
+							disabled : false
+							image : @$scope.file
 							shop : "523b2b7194e535b36cbe68dd"
 							editing : true
 						}
@@ -40,13 +42,25 @@ app.controller 'ShopController',
 					#	@$scope.addShopItemBackground = ''
 			)
 			
+			# Editing one item
+			@$scope.startEditing = (item) =>
+				if !item.editing
+					shopItem.editing = false for shopItem in @$scope.showcase # reset editing
+					item.editing = true
+			
 			# Save one item
 			@$scope.save = (item) =>
-				@$http
-					.post("/api/shopItem", item, @auth.getConfigHeaders())
-					.success (data) =>
-						item._id = data.id
-						@$scope.uploadImage(item)
+				if item.image?
+					item.disabled = true
+					@$http
+						.post("/api/shopItem", item, @auth.getConfigHeaders())
+						.success (data) =>
+							item._id = data.id
+							@$scope.uploadImage(item)
+						.error (data) =>
+							item.disabled = false
+				else
+					false # todo add support for editing with `PUT /shopItem/:id`
 			
 			# Upload image for one item
 			@$scope.uploadImage = (item) =>
@@ -64,8 +78,13 @@ app.controller 'ShopController',
 							processData: false
 							contentType: false
 							type: 'POST'
-							success: (data) ->
-								# console.log data
+							success: (data) =>
+								# Upped, so no more needed
+								delete item.image 
+								# Must show save&delete buttons
+								item.disabled = false
+								# Refresh!
+								@$scope.$apply();
 						}
 						
 						#$.post("https://api.cloudinary.com/v1_1/hysf85emt/image/upload", formData)
@@ -73,5 +92,24 @@ app.controller 'ShopController',
 						#		console.log data
 								
 					.error (data) =>
+						item.disabled = false
 						console.log data
+			
+			# Delete one item
+			@$scope.delete = (item) =>
+				item.disabled = true
+				if item.image?
+					@$scope.showcase = @$scope.showcase.filter (si) -> si isnt item
+					item.disabled = false
+				else
+					@$http
+						.delete("/api/shopItem/#{item._id}", @auth.getConfigHeaders())
+						.success (data) =>
+							item.disabled = false
+							@$scope.showcase = @$scope.showcase.filter (si) -> si._id isnt data._id
+							console.log data
+						.error (data) =>
+							item.disabled = false
+							console.log data
+							
 						

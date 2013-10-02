@@ -169,7 +169,15 @@ app.controller('ShopController', ShopController = (function() {
     this.$scope.added = false;
     this.$scope.refreshShowcase = function() {
       return _this.$http.get("/api/shop/523b2b7194e535b36cbe68dd/showcase", _this.auth.getConfigHeaders()).success(function(data) {
-        return _this.$scope.showcase = data.showcase;
+        var item, _i, _len, _ref, _results;
+        _this.$scope.showcase = data.showcase;
+        _ref = _this.$scope.showcase;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          _results.push(item.disabled = false);
+        }
+        return _results;
       });
     };
     this.$scope.refreshShowcase();
@@ -196,6 +204,7 @@ app.controller('ShopController', ShopController = (function() {
     }, function(newVal, oldVal) {
       if (newVal === true) {
         _this.$scope.showcase.push({
+          disabled: false,
           image: _this.$scope.file,
           shop: "523b2b7194e535b36cbe68dd",
           editing: true
@@ -203,11 +212,29 @@ app.controller('ShopController', ShopController = (function() {
         return _this.$scope.added = false;
       }
     });
+    this.$scope.startEditing = function(item) {
+      var shopItem, _i, _len, _ref;
+      if (!item.editing) {
+        _ref = _this.$scope.showcase;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          shopItem = _ref[_i];
+          shopItem.editing = false;
+        }
+        return item.editing = true;
+      }
+    };
     this.$scope.save = function(item) {
-      return _this.$http.post("/api/shopItem", item, _this.auth.getConfigHeaders()).success(function(data) {
-        item._id = data.id;
-        return _this.$scope.uploadImage(item);
-      });
+      if (item.image != null) {
+        item.disabled = true;
+        return _this.$http.post("/api/shopItem", item, _this.auth.getConfigHeaders()).success(function(data) {
+          item._id = data.id;
+          return _this.$scope.uploadImage(item);
+        }).error(function(data) {
+          return item.disabled = false;
+        });
+      } else {
+        return false;
+      }
     };
     this.$scope.uploadImage = function(item) {
       return _this.$http.get("/api/shopItem/" + item._id + "/signature", _this.auth.getConfigHeaders()).success(function(data) {
@@ -224,11 +251,36 @@ app.controller('ShopController', ShopController = (function() {
           processData: false,
           contentType: false,
           type: 'POST',
-          success: function(data) {}
+          success: function(data) {
+            delete item.image;
+            item.disabled = false;
+            return _this.$scope.$apply();
+          }
         });
       }).error(function(data) {
+        item.disabled = false;
         return console.log(data);
       });
+    };
+    this.$scope["delete"] = function(item) {
+      item.disabled = true;
+      if (item.image != null) {
+        _this.$scope.showcase = _this.$scope.showcase.filter(function(si) {
+          return si !== item;
+        });
+        return item.disabled = false;
+      } else {
+        return _this.$http["delete"]("/api/shopItem/" + item._id, _this.auth.getConfigHeaders()).success(function(data) {
+          item.disabled = false;
+          _this.$scope.showcase = _this.$scope.showcase.filter(function(si) {
+            return si._id !== data._id;
+          });
+          return console.log(data);
+        }).error(function(data) {
+          item.disabled = false;
+          return console.log(data);
+        });
+      }
     };
   }
 

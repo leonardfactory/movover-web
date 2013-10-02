@@ -130,6 +130,9 @@ h2 {
 	margin-bottom: 2em;
 	padding: 1em;
 	
+	// Hey, click me to edit!
+	cursor: pointer;
+	
 	&.half {
 		@include border-left-radius(6px);
 	}
@@ -155,6 +158,22 @@ h2 {
 	background-color: #ecf0f1;
 	margin-bottom: 2em;
 	padding: 1em;
+
+	&.ng-hide-add,
+	&.ng-hide-remove {
+		@include single-transition(all, 0.2s, ease-in-out);
+		display: inline-block !important;
+	}
+	
+	&.ng-hide-add.ng-hide-add-active,
+	&.ng-hide-remove {
+		opacity: 0;
+	}
+	
+	&.ng-hide-add,
+	&.ng-hide-remove.ng-hide-remove-active {
+		opacity: 1;
+	}
 }
 
 .shop-item-adder {
